@@ -228,10 +228,28 @@ matemática de Markov, reciben números ya calculados.
 
 ---
 
-## Capturas
+## Verificación
 
-Para generar la captura de pantalla: `npm run dev`, abre la aplicación y captura la vista
-completa. Se recomienda guardarla en `docs/captura.png` y enlazarla aquí.
+Comprobado en el navegador con la matriz por defecto:
+
+- La tabla muestra 1, 3, 5 y 10 pasos, y cada fila suma 100.0%.
+- Al editar una celda hasta que su fila no suma 1, aparece el error junto a la fila y los
+  resultados se ocultan.
+- "Restablecer valores de ejemplo" devuelve la matriz, el vector y los resultados.
+- La consola del navegador no registra errores.
+
+Valores observados:
+
+```
+Paso  1     48.0% / 31.0% / 21.0%
+Paso  3     46.7% / 31.6% / 21.7%
+Paso  5     46.4% / 31.7% / 21.9%
+Paso 10     46.3% / 31.7% / 22.0%
+Largo plazo 46.3% / 31.7% / 22.0%
+```
+
+Para añadir una captura: `npm run dev`, abre la aplicación y guarda la imagen en
+`docs/captura.png`; enlázala desde esta sección.
 
 ---
 
