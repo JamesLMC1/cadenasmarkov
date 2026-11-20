@@ -53,7 +53,7 @@
 - [x] 6.1 Escribir un test de integración de `App` que cubra el recorrido completo: matriz válida → cuatro pasos y dos gráficas; fila inválida → error visible y resultados ocultos
 - [x] 6.2 Ejecutar `npm.cmd run coverage` y verificar 90% en `src/lib/` y 80% global
 - [x] 6.3 Ejecutar `npm.cmd run typecheck` y verificar que no hay errores de tipos
-- [ ] 6.4 Escribir el `README.md` con el modelo (estados, matriz, π₀, fórmula), cómo ejecutar, capturas, pruebas, proceso SDD y uso del agente, y verificar que los comandos documentados funcionan tal cual
+- [x] 6.4 Escribir el `README.md` con el modelo (estados, matriz, π₀, fórmula), cómo ejecutar, capturas, pruebas, proceso SDD y uso del agente, y verificar que los comandos documentados funcionan tal cual
 - [x] 6.5 Verificar manualmente en el navegador el recorrido completo con la matriz por defecto y anotar los valores obtenidos
 - [x] 6.6 Ejecutar `openspec.cmd validate markov-clima --strict` y verificar que no reporta errores ni advertencias
 
