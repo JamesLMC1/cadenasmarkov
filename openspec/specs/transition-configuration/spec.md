@@ -8,9 +8,9 @@ inmediato si los valores introducidos son utilizables para el cálculo.
 
 ### Requirement: Edición de la matriz de transición
 
-La interfaz SHALL mostrar una matriz editable de 3×3 precargada con valores de ejemplo, con una
-etiqueta por estado de origen y una por estado de destino, y SHALL reflejar cada cambio en el
-cálculo de resultados.
+La interfaz SHALL mostrar una matriz editable de 3×3 precargada con valores de ejemplo, con
+encabezados de fila y columna que incluyan el icono y el color del estado, y SHALL reflejar cada
+cambio en el cálculo de resultados.
 
 #### Scenario: Carga inicial
 
@@ -27,6 +27,11 @@ cálculo de resultados.
 
 - **WHEN** el usuario enfoca cualquier campo de la matriz
 - **THEN** puede identificar el estado de origen y el de destino de ese campo
+
+#### Scenario: Encabezados con icono de estado
+
+- **WHEN** el usuario observa los encabezados de la matriz
+- **THEN** cada estado se identifica por su nombre, su icono y su color
 
 ### Requirement: Edición de la distribución inicial
 
