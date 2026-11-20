@@ -7,7 +7,7 @@
  */
 export default function ErrorList({ message }) {
   return (
-    <p role="alert" className="error">
+    <p role="alert" className="mc-error">
       {message}
     </p>
   )

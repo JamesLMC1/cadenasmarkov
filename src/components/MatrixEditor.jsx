@@ -1,6 +1,7 @@
 // @ts-check
 import { formatPercent } from '../lib/format.js'
 import { STATE_LABELS } from '../lib/markov.js'
+import StateIcon from './StateIcon.jsx'
 
 const ROW_TOLERANCE = 1e-9
 
@@ -16,7 +17,7 @@ const ROW_TOLERANCE = 1e-9
  */
 export default function MatrixEditor({ matrix, onChangeCell }) {
   return (
-    <div className="matrix-editor">
+    <div className="mc-matrix">
       <table>
         <caption>
           Probabilidad de pasar de un estado (fila) a otro (columna)
@@ -26,7 +27,10 @@ export default function MatrixEditor({ matrix, onChangeCell }) {
             <th scope="col">De \ A</th>
             {STATE_LABELS.map((label) => (
               <th key={label} scope="col">
-                {label}
+                <span className="mc-state-label">
+                  <StateIcon state={label} size={16} />
+                  {label}
+                </span>
               </th>
             ))}
             <th scope="col">Suma</th>
@@ -44,7 +48,12 @@ export default function MatrixEditor({ matrix, onChangeCell }) {
 
             return (
               <tr key={STATE_LABELS[rowIndex]}>
-                <th scope="row">{STATE_LABELS[rowIndex]}</th>
+                <th scope="row">
+                  <span className="mc-state-label">
+                    <StateIcon state={STATE_LABELS[rowIndex]} size={16} />
+                    {STATE_LABELS[rowIndex]}
+                  </span>
+                </th>
                 {row.map((value, columnIndex) => {
                   const cellValue = Number.parseFloat(value)
                   const cellOk = Number.isFinite(cellValue)
@@ -52,6 +61,7 @@ export default function MatrixEditor({ matrix, onChangeCell }) {
                   return (
                     <td key={`${rowIndex}-${columnIndex}`}>
                       <input
+                        className="mc-input"
                         type="number"
                         min="0"
                         max="1"
@@ -67,11 +77,13 @@ export default function MatrixEditor({ matrix, onChangeCell }) {
                     </td>
                   )
                 })}
-                <td className="row-total">
+                <td className="mc-row-total">
                   {rowOk ? (
-                    <span className="badge badge-ok">Σ {formatPercent(total)}</span>
+                    <span className="mc-badge mc-badge-ok">
+                      Σ {formatPercent(total)}
+                    </span>
                   ) : (
-                    <span className="badge badge-bad" role="alert">
+                    <span className="mc-badge mc-badge-bad" role="alert">
                       {hasNonNumeric
                         ? 'Valor numérico requerido'
                         : `Debe sumar 1 (Σ ${formatPercent(total)})`}

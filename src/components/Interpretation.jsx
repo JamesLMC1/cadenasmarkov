@@ -1,17 +1,9 @@
 // @ts-check
 import { formatDelta, formatPercent } from '../lib/format.js'
 import { STATE_LABELS } from '../lib/markov.js'
-
-/**
- * @param {number[]} values
- * @returns {number} Índice del valor más alto.
- */
-function indexOfMax(values) {
-  return values.reduce(
-    (bestIndex, value, index) => (value > values[bestIndex] ? index : bestIndex),
-    0
-  )
-}
+import { indexOfMax } from '../lib/stats.js'
+import { stateTheme } from '../theme.js'
+import StateIcon from './StateIcon.jsx'
 
 /**
  * Traduce los resultados a una frase en español.
@@ -31,7 +23,7 @@ export default function Interpretation({ steps, stationary }) {
   const sameState = stepBest === longBest
 
   return (
-    <p className="interpretation">
+    <p className="mc-note">
       En 10 pasos el estado más probable es <strong>{stepLabel}</strong> con{' '}
       {formatPercent(last[stepBest])}. A largo plazo el clima tiende a{' '}
       <strong>{longLabel}</strong> con {formatPercent(stationary[longBest])}

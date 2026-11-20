@@ -3,6 +3,7 @@ import { useMemo, useState } from 'react'
 import ErrorList from './components/ErrorList.jsx'
 import InitialVector from './components/InitialVector.jsx'
 import Interpretation from './components/Interpretation.jsx'
+import KpiGrid from './components/KpiGrid.jsx'
 import MatrixEditor from './components/MatrixEditor.jsx'
 import ResultsTable from './components/ResultsTable.jsx'
 import StationaryCard from './components/StationaryCard.jsx'
@@ -103,8 +104,8 @@ export default function App() {
   }
 
   return (
-    <main className="page">
-      <header className="page-header">
+    <main className="mc-page">
+      <header className="mc-header">
         <h1>MarkovClima</h1>
         <p>
           Predicción del clima con una cadena de Markov de tres estados. Ajusta la
@@ -113,37 +114,59 @@ export default function App() {
         </p>
       </header>
 
-      <div className="layout">
-        <section className="panel" aria-labelledby="matrix-title">
+      <div className="mc-layout">
+        <section className="mc-card mc-span-8" aria-labelledby="matrix-title">
           <h2 id="matrix-title">Matriz de transición</h2>
+          <p className="mc-hint">
+            Cada fila es el estado de hoy y cada columna el de mañana. Las filas
+            deben sumar 1 (100%).
+          </p>
           <MatrixEditor matrix={matrixText} onChangeCell={handleCellChange} />
         </section>
 
-        <section className="panel" aria-labelledby="initial-title">
+        <section className="mc-card mc-span-4" aria-labelledby="initial-title">
           <h2 id="initial-title">Clima de hoy</h2>
+          <p className="mc-hint">
+            Probabilidad de cada estado hoy. Los tres valores deben sumar 1.
+          </p>
           <InitialVector initial={initialText} onChangeValue={handleInitialChange} />
-          <button type="button" className="button-secondary" onClick={handleReset}>
+          <button
+            type="button"
+            className="mc-button mc-button-secondary"
+            onClick={handleReset}
+          >
             Restablecer valores de ejemplo
           </button>
         </section>
-      </div>
 
-      <section className="panel" aria-labelledby="results-title">
-        <h2 id="results-title">Resultados</h2>
-        {results && stationary ? (
-          <>
-            <ResultsTable steps={results} />
-            <div className="charts">
-              <StepsLineChart steps={results} initial={initial} />
-              <StepsBarChart steps={results} />
-            </div>
-            <StationaryCard stationary={stationary} />
-            <Interpretation steps={results} stationary={stationary} />
-          </>
-        ) : (
-          <ErrorList message="No hay resultados: corrige los valores marcados para calcular." />
-        )}
-      </section>
+        <section className="mc-card mc-span-12" aria-labelledby="results-title">
+          <h2 id="results-title">Resultados</h2>
+          {results && stationary ? (
+            <>
+              <KpiGrid steps={results} initial={initial} />
+              <div className="mc-charts">
+                <StepsLineChart
+                  steps={results}
+                  initial={initial}
+                  stationary={stationary}
+                />
+                <StepsBarChart steps={results} />
+              </div>
+              <div className="mc-results-grid">
+                <div className="mc-span-7">
+                  <ResultsTable steps={results} />
+                </div>
+                <div className="mc-span-5">
+                  <StationaryCard stationary={stationary} />
+                </div>
+              </div>
+              <Interpretation steps={results} stationary={stationary} />
+            </>
+          ) : (
+            <ErrorList message="No hay resultados: corrige los valores marcados para calcular." />
+          )}
+        </section>
+      </div>
     </main>
   )
 }
