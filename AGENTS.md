@@ -151,8 +151,10 @@ export function stationaryDistribution(matrix, { tolerance = 1e-10, maxIteration
 
 ```js
 /** @returns {Array<{ step: number, [state: string]: number }>} */
-export function toChartSeries(stepsByN, stateLabels) {}
+export function toChartSeries(stepsByN, stateLabels, initial) {}
 ```
+
+El paso 0 se construye con `initial`; si `stepsByN` ya trae la clave 0, no se duplica.
 
 ### Convenciones matemáticas (no las cambies)
 
@@ -182,8 +184,10 @@ porque llamarla con datos inválidos es un bug del llamador, no una condición d
 - **No derives estado con `useEffect`.** Si un valor se calcula a partir de props o de otro estado,
   hazlo en el render (con `useMemo` solo si el cálculo es caro: aquí lo es, la matriz elevada a 10).
 - Los inputs son **controlados**: `value` + `onChange`, sin `ref` para leer valores.
-- Los valores de `<input>` son **strings**: conviértelos con `Number.parseFloat` y valida
-  `Number.isFinite` en el handler antes de guardarlos en el estado.
+- El estado guarda **el texto** del campo y la conversión a número ocurre una sola vez en un
+  `useMemo`, con `Number.parseFloat` + `Number.isFinite` antes de validar. Guardar números en el
+  estado rompe la escritura de decimales ("0." se convierte en 0 y el campo se resetea), así que
+  el texto es el valor de verdad de la entrada.
 - `key` siempre estable (índice de estado o nombre), nunca `Math.random()`.
 - No hay `useEffect` para sincronizar la matriz con el vector inicial: son estados independientes.
 - Nada de `dangerouslySetInnerHTML`.

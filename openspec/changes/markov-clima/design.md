@@ -85,7 +85,7 @@ reimplementar ejes, escalas y leyendas; el presupuesto del proyecto no lo justif
 
 ### D6. Una sola función conoce el formato de Recharts
 
-`src/lib/series.js` → `toChartSeries(stepsByN, stateLabels)` convierte
+`src/lib/series.js` → `toChartSeries(stepsByN, stateLabels, initial)` convierte
 `{1: [...], 3: [...]}` en `[{ step: 0, ... }, { step: 1, ... }, ...]`, incluyendo el paso 0 con
 la distribución inicial.
 
