@@ -12,8 +12,8 @@ pruebas automatizadas.
 |---|---|
 | Modelo | Cadena de Markov de 3 estados, matriz estocástica por filas |
 | Stack | React 19 + Vite + Recharts, JavaScript con JSDoc |
-| Pruebas | 68 pruebas, Vitest + Testing Library |
-| Cobertura | 96% de líneas (94% en el motor de cálculo) |
+| Pruebas | 88 pruebas, Vitest + Testing Library |
+| Cobertura | 95% de líneas (95% en `src/lib/`) |
 | Especificación | OpenSpec, cambio `markov-clima` |
 
 ---
@@ -113,6 +113,47 @@ mostrar números calculados con datos incorrectos.
 
 ---
 
+## Interfaz
+
+Estilo "dashboard científico": fondo lavanda muy suave (`#f4f3fb`), tarjetas blancas de radio 16
+px y una jerarquía tipográfica de 28 / 18 / 14 / 12 px.
+
+### Color con significado
+
+Cada estado tiene un color fijo, presente en tabla, gráficas, tarjetas y formularios. Como el ámbar
+no alcanza contraste AA como texto pequeño, cada estado usa dos tonos: uno de marca para barras y
+líneas, y otro más oscuro para textos.
+
+| Estado | Marca | Texto (AA) | Icono |
+|---|---|---|---|
+| Soleado | `#f59e0b` | `#b45309` | sol |
+| Nublado | `#64748b` | `#475569` | nube |
+| Lluvioso | `#3b82f6` | `#2563eb` | lluvia |
+
+El acento de la interfaz es índigo (`#4f46e5`). Los iconos son SVG propios, sin dependencias, y
+nunca son el único portador de la información: siempre van acompañados del nombre del estado.
+
+### Bloques
+
+1. Cabecera con el nombre y una descripción.
+2. Entradas: matriz 3×3 (8 columnas) y clima de hoy (4 columnas).
+3. Cuatro tarjetas de resumen a 10 pasos, con la diferencia en puntos porcentuales respecto a hoy.
+4. Dos gráficas: evolución con eje X proporcional y líneas punteadas de largo plazo; barras
+   agrupadas con porcentaje sobre cada barra.
+5. Tabla de probabilidades (7 columnas) y distribución estacionaria en barras horizontales (5).
+
+### Responsive y accesibilidad
+
+- Puntos de revisión: 1440, 1024, 768 y 390 px. Sin scroll horizontal del documento; la matriz
+  conserva su cuadrícula 3×3 y las tablas anchas hacen scroll dentro de su tarjeta.
+- Estructura semántica con `main`, `section aria-labelledby`, `table` con `th scope`, etiquetas
+  asociadas a cada campo y `role="img"` con `aria-label` en cada gráfica.
+- Foco visible con anillo índigo, transiciones de 200 ms y respeto a `prefers-reduced-motion`.
+- Los tokens viven en `src/theme.js` y en el bloque `:root` de `src/styles.css`; ambos deben
+  cambiarse juntos.
+
+---
+
 ## Pruebas
 
 ```bash
@@ -120,7 +161,7 @@ npm run test:run
 npm run coverage
 ```
 
-68 pruebas en 12 archivos:
+88 pruebas en 17 archivos:
 
 | Archivo | Qué cubre |
 |---|---|
@@ -136,9 +177,14 @@ npm run coverage
 | `tests/components/Interpretation.test.jsx` | Estados dominantes y cambio al cambiar la matriz |
 | `tests/components/App.test.jsx` | Suma reactiva, errores que aparecen y desaparecen, restablecer |
 | `tests/components/App.integration.test.jsx` | Recorrido completo: válido → resultados; inválido → error y resultados ocultos |
+| `tests/lib/stats.test.js` | Índice del máximo, empates y lista vacía |
+| `tests/components/StateIcon.test.jsx` | Icono decorativo frente a icono con nombre accesible |
+| `tests/components/KpiGrid.test.jsx` | Cuatro tarjetas, signo de la diferencia y caso despreciable |
+| `tests/components/charts.a11y.test.jsx` | Nombre accesible, líneas de referencia y etiquetas de valor |
+| `tests/hooks/useReducedMotion.test.jsx` | Preferencia de movimiento reducido y entorno sin `matchMedia` |
 
 Umbrales configurados en `vite.config.js`: **90% en `src/lib/`** y **80% global**. Estado actual:
-96% global, 94% en `markov.js`.
+95% global, 95% en `src/lib/` y 94% en `markov.js`.
 
 Las gráficas se prueban con `width` y `height` explícitos porque `ResponsiveContainer` mide 0 en
 jsdom; se verifica el contenido y las etiquetas, no la geometría interna de Recharts.
@@ -202,17 +248,24 @@ proceso fue:
 ```
 src/
 ├── main.jsx                  # createRoot + StrictMode
-├── App.jsx                   # estado de entrada y derivación de resultados
+├── App.jsx                   # estado de entrada, layout y derivación de resultados
+├── theme.js                  # colores por estado, acento y espaciado
 ├── lib/
 │   ├── markov.js             # motor puro: validación, potencias, estacionaria
 │   ├── format.js             # porcentajes y deltas
-│   └── series.js             # resultados → datos de Recharts
+│   ├── series.js             # resultados → datos de Recharts
+│   └── stats.js              # índice del máximo (presentación)
+├── hooks/
+│   └── useReducedMotion.js   # prefers-reduced-motion
 ├── components/
 │   ├── MatrixEditor.jsx      # matriz 3×3 controlada
 │   ├── InitialVector.jsx     # π₀ y suma actual
+│   ├── KpiGrid.jsx           # cuatro tarjetas de resumen a 10 pasos
+│   ├── StateIcon.jsx         # sol, nube y lluvia en SVG
 │   ├── ResultsTable.jsx      # 1, 3, 5, 10 pasos
-│   ├── StepsLineChart.jsx    # evolución
+│   ├── StepsLineChart.jsx    # evolución con referencias de largo plazo
 │   ├── StepsBarChart.jsx     # comparación por paso
+│   ├── ChartTooltip.jsx      # tooltip compartido
 │   ├── StationaryCard.jsx    # largo plazo
 │   ├── Interpretation.jsx    # frase en lenguaje natural
 │   └── ErrorList.jsx         # mensaje cuando no hay resultados
@@ -268,3 +321,5 @@ Para añadir una captura: `npm run dev`, abre la aplicación y guarda la imagen 
 ## Licencia
 
 Proyecto académico. Uso educativo.
+
+
